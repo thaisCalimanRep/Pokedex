@@ -3,39 +3,57 @@ const Context = require('./src/bd/base/contextStrategy')
 const pokemonjson = require('./pokemonjson')
 const context = new Context(new MongoDb())
 
-let pokemonInfoViewed = class pokemonInfoViewed {
-    constructor(id = 0, viewed = '') {
+let pokemonInfoUpdate = class pokemonInfoUpdate {
+    constructor(id, viewed) {
             this.id = id;
             this.viewed = viewed;
     }
-
 };
 
 function main(){
-    bdConnection();
-    setPokemonInfo();
+    connectionBD();
+    PokemonInfo();
 };
 
-async function bdConnection(){
+async function connectionBD(){
     await context.connect(); 
 }
 
-async function setPokemonInfo(){    
+async function PokemonInfo(){    
     const pokemonInfoJS = await pokemonjson.getPokemonDataEncounterJs();
-    const existePokemon = await verificaRegistro(pokemonInfoJS);
-    if (existePokemon.length === 0){
-        await context.create(pokemonInfoJS); 
-        console.log('Parabéns! É sua primeira vez vendo esse pokemon', pokemonInfoJS);
+
+    let pokemonBD = await verificaPokemonBD(pokemonInfoJS);
+
+
+    if (pokemonBD.length === 0){
+        pokemonBD = await context.create(pokemonInfoJS); 
     } else{
-        const pokemoninfoExists = await returnPokemonInfoExists(existePokemon);
-        const qtdViewed = parseInt(pokemoninfoExists.viewed) + 1;
-        const pokemonAtualizado = await context.update(parseInt(pokemoninfoExists.id), {viewed: qtdViewed});  
-        console.log(`Parabéns! É sua ${qtdViewed} vez vendo esse pokemon ${pokemonAtualizado}`); 
-    }
+        const infoPokemonUpdate = await infoPokemonUpdateBD(pokemonBD);
+
+        //const qtdViewed = parseInt(infoPokemonUpdate.viewed) + 1;
+
+        pokemonBD = await context.update(parseInt(infoPokemonUpdate.id), {viewed: parseInt(infoPokemonUpdate.viewed) + 1});  
+    } 
+
+    printEncontroPokemon(pokemonBD);
+    
     
 }
 
-async function returnPokemonInfoExists(pokemonData){
+function printEncontroPokemon(pokemon){
+    console.log('==============');
+    console.log(`Parabéns! Você já encontrou o pokémon ${pokemon.nome} ${pokemon.viewed} vezes.`)  
+    console.log('ID:', pokemon.id);   
+    console.log('Name:', pokemon.nome);
+    console.log(`Tamanho: ${pokemon.height}m`);
+    console.log(`Peso: ${pokemon.weight}Kg`);   
+    console.log('Tipos:', pokemon.types);
+    console.log('Habilidades:', pokemon.abilities);
+    console.log('==============');  
+}
+
+
+async function infoPokemonUpdateBD(pokemonData){
 
     let pokemonId = pokemonData.map(function(pokemonInfoId){
         return pokemonInfoId.id
@@ -49,7 +67,7 @@ async function returnPokemonInfoExists(pokemonData){
     return pokemonInfos;
 }
 
-async function verificaRegistro(item){
+async function verificaPokemonBD(item){
     const pokemonRead = await context.read({id: item.id});
    return pokemonRead;
 }

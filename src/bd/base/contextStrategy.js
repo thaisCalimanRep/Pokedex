@@ -1,4 +1,4 @@
-const IDb = require('./interfaceDb');
+const IDb = require("./interfaceDb");
 class ContextStrategy extends IDb {
   constructor(database) {
     super();
@@ -8,8 +8,8 @@ class ContextStrategy extends IDb {
     return this._database.isConnected();
   }
   connect() {
-    return this._database.connect()
-  }
+    return this._database.connect();
+  }S
   create(item) {
     return this._database.create(item);
   }

@@ -1,17 +1,18 @@
-const axios = require('axios')
-const URL = `https://pokeapi.co/api/v2`
+const axios = require("axios");
+const URL = `https://pokeapi.co/api/v2`;
 
 async function getPokemon(nome) {
-    const url= `${URL}/pokemon/${nome}`
-    const response = await axios.get(url)
-    return response.data
+  const url = `${URL}/pokemon/${nome}`;
+  const response = await axios.get(url);
+  return response.data;
 }
 
-async function getPokemonCharac(id) {
-    const url= `${URL}/characteristic/${id}`
-    const response = await axios.get(url)
-    return response.data
-}
+//Nao implementado
+// async function getPokemonCharac(id) {
+//   const url = `${URL}/characteristic/${id}`;
+//   const response = await axios.get(url);
+//   return response.data;
+// }
 
 // getPokemon('pikachu')
 //     .then(function (resultado) {
@@ -30,6 +31,6 @@ async function getPokemonCharac(id) {
 // })
 
 module.exports = {
-    getPokemon,
-    getPokemonCharac
-}
+  getPokemon,
+  //getPokemonCharac,
+};
