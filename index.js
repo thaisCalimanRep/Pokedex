@@ -1,9 +1,9 @@
 const MongoDb = require("./src/bd/mongoDbStrategy");
 const Context = require("./src/bd/base/contextStrategy");
 const pokemonjson = require("./pokemonjson");
-const express = require('express');
+// const express = require('express');
 const context = new Context(new MongoDb());
-const server = express();
+// const server = express();
 
 let pokemonInfoUpdate = class pokemonInfoUpdate {
   constructor(id, viewed) {
@@ -44,9 +44,9 @@ async function PokemonInfo() {
   return pokemonBD;
 }
 
-server.get('pokemon', () => {
+// server.get('pokemon', () => {
 
-})
+// })
 
 function printEncontroPokemon(pokemon) {
 
@@ -86,6 +86,6 @@ async function verificaPokemonBD(idPokemon) {
   return pokemonRead;
 }
 
-server.listen(3030);
+//server.listen(3030);
 
 main();
