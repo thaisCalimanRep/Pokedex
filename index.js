@@ -1,7 +1,9 @@
 const MongoDb = require("./src/bd/mongoDbStrategy");
 const Context = require("./src/bd/base/contextStrategy");
 const pokemonjson = require("./pokemonjson");
+const express = require('express');
 const context = new Context(new MongoDb());
+const server = express();
 
 let pokemonInfoUpdate = class pokemonInfoUpdate {
   constructor(id, viewed) {
@@ -42,13 +44,16 @@ async function PokemonInfo() {
   return pokemonBD;
 }
 
+server.get('pokemon', () => {
+
+})
+
 function printEncontroPokemon(pokemon) {
 
   let qtdeVezesString = "vez";
   if (pokemon.viewed > 1) {
     qtdeVezesString = "vezes";
   }
-
   console.log("==============");
   console.log(
     `Parabéns! Você já encontrou o pokémon ${pokemon.nome} ${pokemon.viewed} ${qtdeVezesString}.`
@@ -80,4 +85,7 @@ async function verificaPokemonBD(idPokemon) {
   const pokemonRead = await context.read({ id: idPokemon });
   return pokemonRead;
 }
+
+server.listen(3030);
+
 main();
