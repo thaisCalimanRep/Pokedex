@@ -61,7 +61,7 @@ class MongoDB extends ICrud {
   }
   connect() {
     Mongoose.connect("mongodb://thais:thais123@localhost:27017/pokemons", {
-      useNewUrlParser: true,
+      useNewUrlParser: true
     }).catch((error) => {
       if (!error) return;
       console.log("Falha na conexão!", error);

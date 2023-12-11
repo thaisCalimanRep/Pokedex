@@ -1,4 +1,5 @@
 const service = require("./service");
+const qtdadeMaxPokemon = 1010;
 
 const pokemonInfo = class pokemonInfo {
   constructor(
@@ -20,8 +21,8 @@ const pokemonInfo = class pokemonInfo {
   }
 };
 
-function getPokemonEncounter() {
-  var indexpokemon = Math.floor(Math.random() * 1010);
+function getPokemonIDEncounter() {
+  var indexpokemon = Math.floor(Math.random() * qtdadeMaxPokemon);
   return indexpokemon;
 }
 
@@ -39,9 +40,9 @@ function getTypePokemon(pokemonData) {
 }
 
 function getAbilitiesPokemon(pokemonData) {
-//   let arrayAbilities = pokemonData.abilities.map(function (abilities) {
-//     return abilities;
-//   });
+  //   let arrayAbilities = pokemonData.abilities.map(function (abilities) {
+  //     return abilities;
+  //   });
 
   const Enabled = pokemonData.abilities.filter(function (abilities) {
     const abilitiesEnabled = abilities.is_hidden === false;
@@ -82,8 +83,8 @@ async function getDataPokemon(indexNamePokemon, isName) {
   }
 }
 
-async function getPokemonDataEncounterJs() {
-  const pokemonData = await getDataPokemon(getPokemonEncounter(), false);
+async function getPokemonDataEncounterJs(idpokemon) {
+  const pokemonData = await getDataPokemon(idpokemon, false);
   return pokemonData;
 }
 
@@ -96,5 +97,6 @@ function upperCaseArray(lowerCaseArray) {
 
 module.exports = {
   getPokemonDataEncounterJs,
-  pokemonInfo
+  getPokemonIDEncounter,
+  pokemonInfo,
 };

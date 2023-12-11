@@ -10,9 +10,11 @@ let pokemonInfoUpdate = class pokemonInfoUpdate {
   }
 };
 
-function main() {
+async function main() {
   connectionBD();
-  PokemonInfo();
+  const pokemon = await PokemonInfo();
+
+  printEncontroPokemon(pokemon);
 }
 
 async function connectionBD() {
@@ -20,29 +22,36 @@ async function connectionBD() {
 }
 
 async function PokemonInfo() {
-  const pokemonInfoJS = await pokemonjson.getPokemonDataEncounterJs();
+  const idPokemonEncounter = pokemonjson.getPokemonIDEncounter();
 
-  let pokemonBD = await verificaPokemonBD(pokemonInfoJS);
+  let pokemonBD = await verificaPokemonBD(idPokemonEncounter);
 
   if (pokemonBD.length === 0) {
+    const pokemonInfoJS = await pokemonjson.getPokemonDataEncounterJs(
+      idPokemonEncounter
+    );
     pokemonBD = await context.create(pokemonInfoJS);
   } else {
     const infoPokemonUpdate = await infoPokemonUpdateBD(pokemonBD);
-
-    //const qtdViewed = parseInt(infoPokemonUpdate.viewed) + 1;
 
     pokemonBD = await context.update(parseInt(infoPokemonUpdate.id), {
       viewed: parseInt(infoPokemonUpdate.viewed) + 1,
     });
   }
 
-  printEncontroPokemon(pokemonBD);
+  return pokemonBD;
 }
 
 function printEncontroPokemon(pokemon) {
+
+  let qtdeVezesString = "vez";
+  if (pokemon.viewed > 1) {
+    qtdeVezesString = "vezes";
+  }
+
   console.log("==============");
   console.log(
-    `Parabéns! Você já encontrou o pokémon ${pokemon.nome} ${pokemon.viewed} x.`
+    `Parabéns! Você já encontrou o pokémon ${pokemon.nome} ${pokemon.viewed} ${qtdeVezesString}.`
   );
   console.log("ID:", pokemon.id);
   console.log("Name:", pokemon.nome);
@@ -61,13 +70,14 @@ async function infoPokemonUpdateBD(pokemonData) {
   let pokemonViewed = pokemonData.map(function (pokemonInfoViewed) {
     return pokemonInfoViewed.viewed;
   });
-  const pokemonInfos = new pokemonInfoViewed(pokemonId[0], pokemonViewed[0]);
+
+  const pokemonInfos = new pokemonViewed(pokemonId[0], pokemonViewed[0]);
 
   return pokemonInfos;
 }
 
-async function verificaPokemonBD(item) {
-  const pokemonRead = await context.read({ id: item.id });
+async function verificaPokemonBD(idPokemon) {
+  const pokemonRead = await context.read({ id: idPokemon });
   return pokemonRead;
 }
 main();
